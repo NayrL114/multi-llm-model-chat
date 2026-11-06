@@ -1,0 +1,22 @@
+# Local Postgres for the MVP. Start with `npm run db:up`.
+services:
+  postgres:
+    image: postgres:17-alpine
+    container_name: multi-model-chat-db
+    environment:
+      POSTGRES_USER: mmchat
+      POSTGRES_PASSWORD: mmchat
+      POSTGRES_DB: mmchat
+    ports:
+      # Host port 5434: 5432 is used by another project's Postgres, 5433 by a native install.
+      - "5434:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U mmchat -d mmchat"]
+      interval: 2s
+      timeout: 3s
+      retries: 20
+
+volumes:
+  pgdata:
